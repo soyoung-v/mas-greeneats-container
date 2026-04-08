@@ -1,11 +1,11 @@
-package com.green.eats.gateway;
+package com.green.eats.store;
 
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
 @SpringBootApplication
-public class GatewayServiceApplication {
+public class StoreServiceApplication {
     public static void main(String[] args) {
-        SpringApplication.run(GatewayServiceApplication.class, args);
+        SpringApplication.run(StoreServiceApplication.class, args);
     }
 }
