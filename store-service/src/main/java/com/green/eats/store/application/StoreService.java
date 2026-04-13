@@ -1,10 +1,12 @@
 package com.green.eats.store.application;
 
+import com.green.eats.store.application.model.MenuGetRes;
 import com.green.eats.store.entity.Menu;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Service
@@ -13,7 +15,17 @@ import java.util.List;
 public class StoreService {
     private final MenuRepository menuRepository;
 
-    public List<Menu> getAllMenus(){
-        return menuRepository.findAll();
+    public List<MenuGetRes> getAllMenus(){
+        List<Menu> menuList = menuRepository.findAll();
+        List<MenuGetRes> resList = new ArrayList<>( menuList.size());
+         for(Menu item : menuList) {
+             MenuGetRes res = new MenuGetRes(item);
+             resList.add(res);
+
+             //스트림 방식
+             List<MenuGetRes> resList2 = menuList.stream()
+                     .map(MenuGetRes::new).toList();
+         }
+         return resList;
     }
 }
