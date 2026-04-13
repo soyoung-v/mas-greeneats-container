@@ -18,12 +18,14 @@ public class UserService {
     private final PasswordEncoder passwordEncoder;
 
     public void signup(UserSignupReq req){
+        String hashedPw = passwordEncoder.encode( req.getPassword() );
+
         //회원가입 시켜주세요
         User signedUser = new User();
         signedUser.setAddress(req.getAddress());
         signedUser.setName(req.getName());
         signedUser.setEmail(req.getEmail());
-        signedUser.setPassword(req.getPassword());
+        signedUser.setPassword(hashedPw);
 
         userRepository.save(signedUser);
     }
