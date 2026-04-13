@@ -4,6 +4,7 @@ package com.green.eats.store.application;
 import com.green.eats.common.auth.UserContext;
 import com.green.eats.common.model.ResultResponse;
 import com.green.eats.common.model.UserDto;
+import com.green.eats.store.application.model.MenuGetRes;
 import com.green.eats.store.entity.Menu;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
@@ -26,7 +27,7 @@ public class StoreController {
         log.info("userDto: {}",userDto);
 
 
-        List<Menu> menus = storeService.getAllMenus();
+        List<MenuGetRes> menus = storeService.getAllMenus();
         return ResultResponse.builder()
                 .resultMessage(String.format("%d rows", menus.size()))
                 .resultData(menus)
