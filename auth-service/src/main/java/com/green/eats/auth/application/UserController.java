@@ -25,6 +25,7 @@ public class UserController {
 
     @PostMapping("/signup")
     public ResultResponse<?> signup(@RequestBody UserSignupReq req){
+        userService.signup(req);
         return ResultResponse.builder()
                             .resultMessage("회원가입 성공")
                             .resultData(1)
