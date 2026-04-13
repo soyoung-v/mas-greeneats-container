@@ -32,7 +32,7 @@ public class WebSecurityConfiguration {
                 .cors(cors -> cors.configurationSource(corsConfigurationSource()))
                 //인가처리 (권한처리)
                 .authorizeHttpRequests(auth -> auth
-                        .requestMatchers(  "/api/order/**" ).permitAll()
+                        .requestMatchers(  "/api/order/**" , "/api/store/menu").authenticated()
                         .anyRequest().permitAll()
                 )
 
