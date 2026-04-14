@@ -26,6 +26,7 @@ public class UserService {
         signedUser.setName(req.getName());
         signedUser.setEmail(req.getEmail());
         signedUser.setPassword(hashedPw);
+        signedUser.setEnumUserRole(req.getUserRole());
 
         userRepository.save(signedUser);
     }

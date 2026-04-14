@@ -37,7 +37,7 @@ public class UserController {
         User signinUser = userService.signin(req);
 
         //인증쿠키
-        JwtUser jwtUser  = new JwtUser( signinUser.getId(), signinUser.getName() );
+        JwtUser jwtUser  = new JwtUser( signinUser.getId(), signinUser.getName(), signinUser.getEnumUserRole() );
         jwtTokenManager.issue(res, jwtUser);
 
         UserSigninRes userSigninRes = UserSigninRes.builder()

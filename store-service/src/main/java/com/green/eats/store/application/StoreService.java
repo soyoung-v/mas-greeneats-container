@@ -17,15 +17,15 @@ public class StoreService {
 
     public List<MenuGetRes> getAllMenus(){
         List<Menu> menuList = menuRepository.findAll();
-        List<MenuGetRes> resList = new ArrayList<>( menuList.size());
+        List<MenuGetRes> resList = new ArrayList<>( menuList.size() );
          for(Menu item : menuList) {
              MenuGetRes res = new MenuGetRes(item);
              resList.add(res);
 
-             //스트림 방식
-             List<MenuGetRes> resList2 = menuList.stream()
-                     .map(MenuGetRes::new).toList();
          }
+         //스트림 방식
+         List<MenuGetRes> resList2 = menuList.stream()
+                 .map(MenuGetRes::new).toList();
          return resList;
     }
 }
