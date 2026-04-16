@@ -31,16 +31,16 @@ public class UserEventConsumer {
                         .name(event.getName())
                         .build();
                 userCacheRepository.save(userCache);
-                log.info("✅ UserCache 저장/업데이트 완료: {}", event.getUserId());
+                log.info("UserCache 저장/업데이트 완료: {}", event.getUserId());
 
-            } else if ("DELETE".equals(type)) {
+            } else if (type == UserEventType.DELETE) {
                 // 회원 탈퇴 처리
                 userCacheRepository.deleteById(event.getUserId());
                 log.info("🗑️ UserCache 삭제 완료: {}", event.getUserId());
             }
 
         } catch (Exception e) {
-            log.error("❌ Kafka 메시지 처리 중 오류 발생: ", e);
+            log.error(" Kafka 메시지 처리 중 오류 발생: ", e);
             // 여기서 발생한 예외를 처리하지 않으면 메시지가 무한 재처리에 빠질 수 있으므로 주의!
         }
     }
