@@ -1,5 +1,6 @@
 package com.green.eats.auth.application;
 
+import com.green.eats.auth.application.model.UserPutReq;
 import com.green.eats.auth.application.model.UserSigninReq;
 import com.green.eats.auth.application.model.UserSignupReq;
 import com.green.eats.auth.entity.User;
@@ -11,6 +12,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.kafka.core.KafkaTemplate;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.server.ResponseStatusException;
 
 @Slf4j
@@ -22,26 +24,8 @@ public class UserService {
     private final KafkaTemplate<String, Object> kafkaTemplate;
 
 
-    public void signup(UserSignupReq req){
-        String hashedPw = passwordEncoder.encode( req.getPassword() );
-
-        //회원가입 시켜주세요
-        User signedUser = new User();
-        signedUser.setAddress(req.getAddress());
-        signedUser.setName(req.getName());
-        signedUser.setEmail(req.getEmail());
-        signedUser.setPassword(hashedPw);
-        signedUser.setEnumUserRole(req.getUserRole());
-
-        userRepository.save(signedUser);
-
-        UserEvent userEvent = UserEvent.builder()
-                .userId( signedUser.getId() )
-                .name( signedUser.getName() )
-                .eventType( UserEventType.CREATE )
-                .build();
-
-        kafkaTemplate.send("user-topic", String.valueOf(signedUser.getId()), userEvent)
+    private void sendUserEvent(Long id, UserEvent userEvent){
+        kafkaTemplate.send("user-topic", String.valueOf(id), userEvent)
                 .whenComplete((result, ex) -> {
                     if (ex == null) {
                         // 성공 시 로그
@@ -53,7 +37,67 @@ public class UserService {
                         log.error(" [Kafka Failure] 원인: {}", ex.getMessage());
                     }
                 });
+
     }
+
+    public void signup(UserSignupReq req){
+        String hashedPw = passwordEncoder.encode( req.getPassword() );
+
+        //회원가입 시켜주세요
+        User signedUser = new User();
+        signedUser.setAddress(req.getAddress());
+        signedUser.setName(req.getName());
+        signedUser.setEmail(req.getEmail());
+        signedUser.setPassword(hashedPw);
+        signedUser.setEnumUserRole(req.getUserRole());
+        signedUser.setIsDel(false);
+
+        userRepository.save(signedUser);
+
+        UserEvent userEvent = UserEvent.builder()
+                .userId( signedUser.getId() )
+                .name( signedUser.getName() )
+                .eventType( UserEventType.CREATE )
+                .build();
+
+        sendUserEvent(signedUser.getId(), userEvent);
+    }
+
+    @Transactional
+    public void updUser(Long userId, UserPutReq req) {
+        User user = userRepository.findById(userId).orElseThrow();
+
+        user.setName( req.getName() );
+        user.setAddress( req.getAddress() );
+
+        userRepository.save(user);
+
+        UserEvent userEvent = UserEvent.builder()
+                .userId( user.getId() )
+                .name( user.getName() )
+                .eventType( UserEventType.UPDATE )
+                .build();
+
+        sendUserEvent(user.getId(), userEvent);
+
+    }
+
+    public void delUser(Long userId) {
+        User user = userRepository.findById(userId).orElseThrow();
+        user.setIsDel( true );
+
+        userRepository.save(user);
+
+        UserEvent userEvent = UserEvent.builder()
+                .userId( user.getId() )
+                .name( user.getName() )
+                .eventType( UserEventType.DELETE )
+                .build();
+
+        sendUserEvent(user.getId(), userEvent);
+    }
+
+
 
     public User signin(UserSigninReq req){
         User signedUser = userRepository.findByEmail(req.getEmail());
