@@ -7,6 +7,7 @@ import com.green.eats.common.model.JwtUser;
 import com.green.eats.common.model.ResultResponse;
 import com.green.eats.common.model.UserDto;
 import com.green.eats.common.security.JwtTokenManager;
+import jakarta.servlet.http.HttpServletRequest;
 import jakarta.servlet.http.HttpServletResponse;
 import jakarta.validation.Valid;
 import lombok.RequiredArgsConstructor;
@@ -69,6 +70,18 @@ public class UserController {
         return ResultResponse.builder()
                 .resultMessage("소프트딜리트 성공")
                 .build();
+    }
+
+    @PostMapping("/signout")
+    public ResultResponse<?> signOut(HttpServletResponse res) {
+        jwtTokenManager.signOut(res);
+        return new ResultResponse<>("로그아웃 성공", 1);
+    }
+
+    @PostMapping("/reissue")
+    public ResultResponse<?> reissue(HttpServletResponse res, HttpServletRequest req) {
+        jwtTokenManager.reissue(req, res);
+        return new ResultResponse<>("AT 재발행", null);
     }
 
 }
