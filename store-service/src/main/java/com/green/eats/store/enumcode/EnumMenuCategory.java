@@ -13,7 +13,10 @@ public enum EnumMenuCategory implements EnumMapperType {
     //enum이름("코드","값")
       KOREAN_FOOD("01","한식")
     , JAPANESE_FOOD("02","일식")
-    , CHINESE_FOOD("03","중식") ;
+    , CHINESE_FOOD("03","중식")
+    , INDIA_FOOD("04", "인도식")
+    , GOOD_FOOD("05", "맛식")
+    ;
 
     private final String code;
     private final String value;

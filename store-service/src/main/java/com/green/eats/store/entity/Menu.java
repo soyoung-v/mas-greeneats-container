@@ -1,6 +1,7 @@
 package com.green.eats.store.entity;
 
 import com.fasterxml.jackson.annotation.JsonProperty;
+import com.green.eats.store.application.model.MenuPostReq;
 import com.green.eats.store.enumcode.EnumMenuCategory;
 import io.hypersistence.utils.hibernate.id.Tsid;
 import jakarta.persistence.Column;
@@ -37,6 +38,13 @@ public class Menu {
             throw new RuntimeException("상품 '" + name + "'의 재고가 부족합니다. (현재: " + stockQuantity + ")");
         }
         this.stockQuantity = restStock;
+    }
+
+    public Menu(MenuPostReq req) {
+        this.name = req.getName();
+        this.price = req.getPrice();
+        this.stockQuantity = req.getStockQuantity();
+        this.enumMenuCategory = req.getMenuCategory();
     }
 
 }
