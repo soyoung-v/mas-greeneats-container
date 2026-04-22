@@ -19,6 +19,7 @@ public class Order {
 
     private Long totalAmount;
 
+    @Column(length = 2, nullable = false)
     private EnumOrderStatus status;
 
     @OneToMany(mappedBy = "order", cascade = CascadeType.ALL)

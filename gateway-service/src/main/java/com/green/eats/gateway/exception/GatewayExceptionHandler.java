@@ -7,6 +7,7 @@ import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.client.ResourceAccessException;
 import org.springframework.web.servlet.NoHandlerFoundException;
+import org.springframework.web.servlet.resource.NoResourceFoundException;
 
 import java.io.IOException;
 import java.net.ConnectException;
@@ -20,7 +21,7 @@ public class GatewayExceptionHandler {
 
 
     // 없는 경로인 경우
-    @ExceptionHandler(NoHandlerFoundException.class)
+    @ExceptionHandler({NoHandlerFoundException.class, NoResourceFoundException.class})
     public ResponseEntity<Object> handleResponseStatus(Exception e) {
         return handleExceptionInternal(CommonErrorCode.NOT_FOUND_PATH);
     }
