@@ -17,7 +17,7 @@ public class Order {
     @Column(nullable = false)
     private Long userId; // user_cache의 ID 참조
 
-    private Long totalAmount;
+    private Integer totalAmount;
 
     @Column(length = 2, nullable = false)
     private EnumOrderStatus status;
@@ -26,7 +26,7 @@ public class Order {
     private List<OrderItem> items = new ArrayList<>();
 
     @Builder
-    public Order(Long userId, Long totalAmount) {
+    public Order(Long userId, Integer totalAmount) {
         this.userId = userId;
         this.totalAmount = totalAmount;
         this.status = EnumOrderStatus.COMPLETED;

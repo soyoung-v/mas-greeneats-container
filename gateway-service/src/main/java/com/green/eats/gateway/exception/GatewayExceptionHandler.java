@@ -2,15 +2,15 @@ package com.green.eats.gateway.exception;
 
 import com.green.eats.common.exception.CommonErrorCode;
 import lombok.extern.slf4j.Slf4j;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
 import org.springframework.web.client.ResourceAccessException;
+import org.springframework.web.server.ResponseStatusException;
 import org.springframework.web.servlet.NoHandlerFoundException;
 import org.springframework.web.servlet.resource.NoResourceFoundException;
 
-import java.io.IOException;
-import java.net.ConnectException;
 import java.util.concurrent.TimeoutException;
 
 import static com.green.eats.common.exception.ServiceExceptionHandler.handleExceptionInternal;
@@ -19,9 +19,8 @@ import static com.green.eats.common.exception.ServiceExceptionHandler.handleExce
 @RestControllerAdvice
 public class GatewayExceptionHandler {
 
-
     // 없는 경로인 경우
-    @ExceptionHandler({NoHandlerFoundException.class, NoResourceFoundException.class})
+    @ExceptionHandler({ NoHandlerFoundException.class, NoResourceFoundException.class })
     public ResponseEntity<Object> handleResponseStatus(Exception e) {
         return handleExceptionInternal(CommonErrorCode.NOT_FOUND_PATH);
     }
@@ -41,8 +40,6 @@ public class GatewayExceptionHandler {
     // 3. 그 외 게이트웨이 자체 오류
     @ExceptionHandler(Exception.class)
     public ResponseEntity<Object> handleGeneralError(Exception e) {
-        log.info("Actual Exception Type: {}", e.getClass().getName());
-        log.info("Exception Message: {}", e.getMessage());
         return handleExceptionInternal(CommonErrorCode.GATEWAY_INTERNAL_ERROR);
     }
 }
